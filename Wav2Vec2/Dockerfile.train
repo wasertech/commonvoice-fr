@@ -1,0 +1,177 @@
+FROM cnstark/pytorch:1.13.0-py3.9.12-cuda11.7.1-ubuntu20.04
+
+ARG transcorer_repo=wasertech/TranScorerLM
+ARG transcorer_branch=a4758e1d3f58411fd928c1f6000494db1768fed5
+ARG transformers_repo=huggingface/transformers
+ARG transformers_branch=04ab5605fbb4ef207b10bf2772d88c53fc242e83
+ARG datasets_repo=huggingface/datasets
+ARG kenlm_branch=3b16e08dd599f4646a77a5ca88b6445467e1e7e9
+
+# Model parameters
+ARG model_language=fr
+ENV MODEL_LANGUAGE=$model_language
+
+# Training hyper-parameters
+ARG batch_size=64
+ENV BATCH_SIZE=$batch_size
+
+ARG opm_nproc=1
+ENV OMP_NUM_THREADS=$opm_nproc
+
+ARG n_hidden=2048
+ENV N_HIDDEN=$n_hidden
+
+ARG epochs=30
+ENV EPOCHS=$epochs
+
+ARG learning_rate=0.0001
+ENV LEARNING_RATE=$learning_rate
+
+ARG dropout=0.3
+ENV DROPOUT=$dropout
+
+ARG lm_top_k=500000
+ENV LM_TOP_K=500000
+
+ARG lm_alpha=0.0
+ENV LM_ALPHA=$lm_alpha
+
+ARG lm_beta=0.0
+ENV LM_BETA=$lm_beta
+
+ARG beam_width=500
+ENV BEAM_WIDTH=$beam_width
+
+ARG early_stop=1
+ENV EARLY_STOP=$early_stop
+
+ARG amp=0
+ENV AMP=$amp
+
+# Dataset management
+ARG duplicate_sentence_count=1
+ENV DUPLICATE_SENTENCE_COUNT=$duplicate_sentence_count
+
+# Should be of the form: lm_alpha_max,lm_beta_max,n_trials
+ARG lm_evaluate_range=
+ENV LM_EVALUATE_RANGE=$lm_evaluate_range
+
+# Others
+ARG english_compatible=0
+ENV ENGLISH_COMPATIBLE=$english_compatible
+
+ARG uid=999
+ENV UID=$uid
+
+ARG gid=999
+ENV GID=$gid
+
+# Make sure we can extract filenames with UTF-8 chars
+ENV LANG=C.UTF-8
+
+# Avoid keyboard-configuration step
+ENV DEBIAN_FRONTEND noninteractive
+
+ENV HOMEDIR /home/trainer
+
+ENV VIRTUAL_ENV_NAME w2v-train
+ENV VIRTUAL_ENV $HOMEDIR/$VIRTUAL_ENV_NAME
+ENV TRANSCORER_DIR $HOMEDIR/transcorer
+
+ENV TRANSCORER_BRANCH=$transcorer_branch
+
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+RUN env
+
+# Get basic packages
+RUN apt-get -qq update && apt-get -qq install -y --no-install-recommends \
+    build-essential \
+    curl \
+    wget \
+    git \
+    ffmpeg \
+    python3 \
+    python3-pip \
+    ca-certificates \
+    cmake \
+    libboost-all-dev \
+    zlib1g-dev \
+    libbz2-dev \
+    liblzma-dev \
+    pkg-config \
+    g++ \
+    virtualenv \
+    unzip \
+    pixz \
+    sox \
+    sudo \
+    libsox-fmt-all \
+    locales locales-all \
+    xz-utils
+
+# For uploading models to HuggingFace hub
+RUN apt -qq install -y --no-install-recommends git-lfs
+
+# For uptodate libsndfile>1
+RUN sudo apt -qq install -y --no-install-recommends software-properties-common
+
+RUN sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu/ jammy main universe"
+
+COPY etc/apt/preferences.d/libsndfile /etc/apt/preferences.d/libsndfile
+
+RUN sudo apt -qq update && sudo apt -qq install -y libsndfile-dev
+
+RUN groupadd -g $GID trainer && \
+    adduser --system --uid $UID --group trainer
+
+RUN echo "trainer ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/trainer && \
+    chmod 0440 /etc/sudoers.d/trainer
+
+# Below that point, nothing requires being root
+USER trainer
+
+WORKDIR $HOMEDIR
+
+RUN virtualenv --python=/usr/bin/python3 $VIRTUAL_ENV_NAME
+
+ENV PATH=$HOMEDIR/$VIRTUAL_ENV_NAME/bin:$PATH
+
+RUN git clone https://github.com/$transcorer_repo.git $TRANSCORER_DIR
+
+WORKDIR $TRANSCORER_DIR
+
+RUN git checkout $transcorer_branch
+
+RUN pip install torch 
+
+RUN pip install numpy
+
+RUN pip install torchaudio
+
+RUN pip install datasets>=1.14
+
+RUN pip install evaluate
+
+RUN pip install transformers==4.11.3
+
+RUN pip install -e .
+
+WORKDIR $HOMEDIR
+
+RUN pip install librosa
+
+RUN pip install jiwer
+
+RUN pip install -U numba
+
+WORKDIR $HOMEDIR
+
+#ENV PATH="$HOMEDIR/kenlm/build/bin/:$PATH"
+
+# Copy now so that docker build can leverage caches
+COPY --chown=trainer:trainer . $HOMEDIR/
+
+COPY --chown=trainer:trainer ${MODEL_LANGUAGE}/ $HOMEDIR/${MODEL_LANGUAGE}/
+
+ENTRYPOINT "$HOMEDIR/run.sh"

@@ -1,0 +1,3 @@
+Package: libsndfile*
+Pin: release n=jammy
+Pin-Priority: 990
