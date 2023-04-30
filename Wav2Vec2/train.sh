@@ -28,6 +28,7 @@ pushd $TRANSCORER_DIR
 	--gradient_checkpointing \
 	--chars_to_ignore , ? . ! - \; \: \" “ % ‘ ” � \
 	--fp16 \
+	--cache_dir "/mnt/tmp/wav2vec2-common_voice-fr" \
 	--group_by_length \
 	--push_to_hub \
 	--do_train y --do_eval y
