@@ -10,6 +10,7 @@ pushd $TRANSCORER_DIR
 	--dataset_config_name="fr" \
 	--output_dir="/mnt/models/wav2vec2-common_voice-fr" \
 	--overwrite_output_dir \
+	--preprocessing_num_workers="24" \
 	--num_train_epochs="15" \
 	--per_device_train_batch_size="16" \
 	--gradient_accumulation_steps="2" \
