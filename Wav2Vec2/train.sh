@@ -34,7 +34,7 @@ pushd $TRANSCORER_DIR
 
 	GRADIENT_ACCUMULATION_FLAG=""
 	if [ "${GAS}" -gt "0" ]; then
-		GRADIENT_ACCUMULATION_FLAG='--gradient_accumulation_steps="${GAS}"'
+		GRADIENT_ACCUMULATION_FLAG="--gradient_accumulation_steps=${GAS}"
 	fi;
 
 	EVAL_STRAT="steps"
