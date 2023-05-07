@@ -1,64 +1,49 @@
 FROM cnstark/pytorch:1.13.0-py3.9.12-cuda11.7.1-ubuntu20.04
 
 ARG transcorer_repo=wasertech/TranScorerLM
-ARG transcorer_branch=a598dd845991227dcda291204de0eb128be8a16e
-ARG transformers_repo=huggingface/transformers
-ARG transformers_branch=04ab5605fbb4ef207b10bf2772d88c53fc242e83
-ARG datasets_repo=huggingface/datasets
-ARG kenlm_branch=3b16e08dd599f4646a77a5ca88b6445467e1e7e9
+ARG transcorer_branch=bdb3004209b90586af9a41ccc3502ce16511b18b
+# ARG transformers_repo=huggingface/transformers
+# ARG transformers_branch=04ab5605fbb4ef207b10bf2772d88c53fc242e83
+# ARG datasets_repo=huggingface/datasets
+# ARG datasets_branch=3b16e08dd599f4646a77a5ca88b6445467e1e7e9
 
 # Model parameters
 ARG model_language=fr
 ENV MODEL_LANGUAGE=$model_language
 
 # Training hyper-parameters
-ARG batch_size=64
+ARG batch_size=32
 ENV BATCH_SIZE=$batch_size
 
 ARG opm_nproc=1
 ENV OMP_NUM_THREADS=$opm_nproc
 
-ARG n_hidden=2048
-ENV N_HIDDEN=$n_hidden
-
 ARG epochs=30
 ENV EPOCHS=$epochs
 
-ARG learning_rate=0.0001
+ARG learning_rate="3e-4"
 ENV LEARNING_RATE=$learning_rate
 
 ARG dropout=0.3
 ENV DROPOUT=$dropout
 
-ARG lm_top_k=500000
-ENV LM_TOP_K=500000
-
-ARG lm_alpha=0.0
-ENV LM_ALPHA=$lm_alpha
-
-ARG lm_beta=0.0
-ENV LM_BETA=$lm_beta
-
-ARG beam_width=500
-ENV BEAM_WIDTH=$beam_width
-
-ARG early_stop=1
-ENV EARLY_STOP=$early_stop
-
-ARG amp=0
+ARG amp=1
 ENV AMP=$amp
 
-# Dataset management
-ARG duplicate_sentence_count=1
-ENV DUPLICATE_SENTENCE_COUNT=$duplicate_sentence_count
+# Gradient Accumulation Steps
+ARG gas=2
+ENV GAS=$gas
 
-# Should be of the form: lm_alpha_max,lm_beta_max,n_trials
-ARG lm_evaluate_range=
-ENV LM_EVALUATE_RANGE=$lm_evaluate_range
+# Data processing workers
+# (too many might OOM) recommended at 1 worker per CPU core or lower.
+# Meaning if you have 12 cores (24 threads) and 100 Gb of RAM, set it to 12 workers.
+# You could probably handle more but with 1 worker per thread,
+# you are likely to experience OOM issues.
+ARG nproc=12
+ENV NPROC=$nproc
 
-# Others
-ARG english_compatible=0
-ENV ENGLISH_COMPATIBLE=$english_compatible
+ARG hub_token=""
+ENV HUB_API_TOKEN=$hub_token
 
 ARG uid=999
 ENV UID=$uid
@@ -76,8 +61,8 @@ ENV HOMEDIR /home/trainer
 
 ENV VIRTUAL_ENV_NAME w2v-train
 ENV VIRTUAL_ENV $HOMEDIR/$VIRTUAL_ENV_NAME
-ENV TRANSCORER_DIR $HOMEDIR/transcorer
 
+ENV TRANSCORER_DIR $HOMEDIR/transcorer
 ENV TRANSCORER_BRANCH=$transcorer_branch
 
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"

@@ -22,3 +22,6 @@ export LM_ICONV_LOCALE=""
 export MODEL_EXPORT_SHORT_LANG=""
 export MODEL_EXPORT_LONG_LANG=""
 export MODEL_EXPORT_ZIP_LANG=""
+
+
+export IGNORE_CHARS=", ? . ! - \; \: \" “ % ‘ ” �"
