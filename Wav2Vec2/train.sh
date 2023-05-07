@@ -24,6 +24,7 @@ pushd $TRANSCORER_DIR
 			echo "Missing MODEL_ID=${MODEL_ID}"
 			echo "Please set MODEL_ID as environment variable or use --model_id"
 		fi
+		huggingface-cli login --token "${HUB_API_TOKEN}"
 		HUB_FLAG="--push_to_hub --hub_token '${HUB_API_TOKEN}' --push_to_hub_model_id '${MODEL_ID}' --use_auth_token y"
 	fi;
 
