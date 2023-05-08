@@ -8,6 +8,9 @@ ARG transcorer_branch=6a27a99326b1392ccc9ed9091253e0a228f80c78
 # ARG datasets_branch=3b16e08dd599f4646a77a5ca88b6445467e1e7e9
 
 # Model parameters
+ARG base_model_name=""
+ENV BASE_MODEL_NAME=$base_model_name
+
 ARG model_language=fr
 ENV MODEL_LANGUAGE=$model_language
 
