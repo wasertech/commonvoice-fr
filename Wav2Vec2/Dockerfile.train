@@ -134,11 +134,11 @@ RUN pip install numpy
 
 RUN pip install torchaudio
 
-RUN pip install datasets>=1.14
+RUN pip install datasets>=1.18.0
 
 RUN pip install evaluate
 
-RUN pip install transformers==4.11.3
+RUN pip install transformers>=4.26.1
 
 RUN pip install -e .
 
