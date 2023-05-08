@@ -6,15 +6,15 @@ pushd $TRANSCORER_DIR
 
 
 	if [ -z "${BASE_MODEL_NAME}" ]; then
-		BASE_MODEL_NAME="facebook/wav2vec2-large-xlsr-53-french"
+		BASE_MODEL_NAME="facebook/wav2vec2-large-xlsr-53"
 	fi
 
 	if [ -f "/transfer-checkpoint/checkpoint" -a ! -f "/mnt/models/wav2vec2-common_voice-fr/pytorch_model.bin" ]; then
 		echo "Using checkpoint from /transfer-checkpoint/checkpoint"
 		CHECKPOINT_FLAG='--model_name_or_path="/mnt/models/wav2vec2-common_voice-fr/" --output_dir="/mnt/models/wav2vec2-common_voice-fr" --resume_from_checkpoint="/transfer-checkpoint/checkpoint"'
 	else
-		echo "Using checkpoint from facebook/wav2vec2-large-xlsr-53-french"
-		CHECKPOINT_FLAG="--model_name_or_path='${BASE_MODEL_NAME}' --output_dir='/mnt/models/wav2vec2-common_voice-fr' --overwrite_output_dir"
+		echo "Using checkpoint from facebook/wav2vec2-large-xlsr-53"
+		CHECKPOINT_FLAG="--model_name_or_path=${BASE_MODEL_NAME} --output_dir='/mnt/models/wav2vec2-common_voice-fr' --overwrite_output_dir"
 	fi;
 
 	AMP_FLAG=""
