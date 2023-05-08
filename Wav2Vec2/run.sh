@@ -18,3 +18,5 @@ export TEMP=/mnt/tmp
 cd ${MODEL_LANGUAGE} && importers.sh && cd ..
 
 train.sh
+
+test.sh
