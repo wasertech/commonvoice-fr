@@ -17,11 +17,6 @@ pushd $TRANSCORER_DIR
 		CHECKPOINT_FLAG="--model_name_or_path=${BASE_MODEL_NAME} --output_dir='/mnt/models/wav2vec2-common_voice-fr' --overwrite_output_dir"
 	fi;
 
-	AMP_FLAG=""
-	if [ "${AMP}" = "1" ]; then
-		AMP_FLAG="--automatic_mixed_precision True"
-	fi;
-
 	HUB_FLAG=""
 	if [ -z "$HUB_API_TOKEN" ]; then
 		if [ -n "$MODEL_ID" ]; then

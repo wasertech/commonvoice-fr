@@ -15,7 +15,7 @@ ARG model_language=fr
 ENV MODEL_LANGUAGE=$model_language
 
 # Training hyper-parameters
-ARG batch_size=32
+ARG batch_size=16
 ENV BATCH_SIZE=$batch_size
 
 ARG opm_nproc=1
