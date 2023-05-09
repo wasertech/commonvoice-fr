@@ -32,12 +32,49 @@ pushd $TRANSCORER_DIR
 		AMP_FLAG="--fp16"
 	fi;
 
+	ENCODER_FLAG=""
+	if [ "${FREEZE_ENCODER}" = "1" ]; then
+		ENCODER_FLAG="--freeze_feature_encoder"
+	fi;
+
 	GRADIENT_ACCUMULATION_FLAG=""
 	if [ "${GAS}" -gt "0" ]; then
 		GRADIENT_ACCUMULATION_FLAG="--gradient_accumulation_steps=${GAS}"
 	fi;
 
-	EVAL_STRAT="steps"
+	if [ "${GRAD_CHECK}" = "1" ]; then
+		GRADIENT_ACCUMULATION_FLAG="${GRADIENT_ACCUMULATION_FLAG} --gradient_checkpointing"
+	fi;
+	
+	IGNORE_CHARS_FLAG=""
+	if [ -z "${IGNORE_CHARS}" ]; then
+		IGNORE_CHARS_FLAG="--chars_to_ignore ${IGNORE_CHARS}"
+	elif [ "${DONT_WARN_IGNORE_CHARS}" != "1" ]; then
+		echo "You should probably ignore some characters like: [ , ? . ! - ; : \" “ % ‘ ” � ]" #noqa
+		echo -n "Do wish to proceed with training session without ignoring any characters? [type any key to start training or Ctr + C to exit] "
+		read -n 1
+	fi;
+
+	if [ -n "${AUDIO_COLUMN}" ]; then
+		echo "Set AUDIO_COLUMN=${AUDIO_COLUMN}"
+		exit 1
+	fi;
+
+	if [ -n "${SIZE_COLUMN}" ]; then
+		echo "Set SIZE_COLUMN=${SIZE_COLUMN}"
+		exit 1
+	fi;
+
+	if [ -n "${TEXT_COLUMN}" ]; then
+		echo "Set TEXT_COLUMN=${TEXT_COLUMN}"
+		exit 1
+	fi;
+
+	if [ "${WARMUP_RATIO}" -gt "0" ]; then
+		WARMUP_FLAG="--warmup_ratio=${WARMUP_RATIO}"
+	elif [ "${WARMUP_STEPS}" -gt "0" ]; then
+		WARMUP_FLAG="--warmup_steps=${WARMUP_STEPS}"
+	fi
 
 	if [ ! -f "/mnt/models/wav2vec2-common_voice-fr/checkpoint-*/*model.bin" ]; then
 		trainscorer \
@@ -50,18 +87,17 @@ pushd $TRANSCORER_DIR
 		--per_device_train_batch_size="${BATCH_SIZE}" \
 		${GRADIENT_ACCUMULATION_FLAG} \
 		--learning_rate="${LEARNING_RATE}" \
-		--warmup_steps="500" \
+		${WARMUP_FLAG} \
 		--evaluation_strategy="${EVAL_STRAT}" \
-		--text_column_name="transcript" \
-		--audio_column_name="wav_filename" \
-		--length_column_name="wav_filesize" \
-		--save_steps="400" \
-		--eval_steps="100" \
+		--text_column_name="${TEXT_COLUMN}" \
+		--audio_column_name="${AUDIO_COLUMN}" \
+		--length_column_name="${SIZE_COLUMN}" \
+		--save_steps="${SAVE_STEPS}" \
+		--eval_steps="${EVAL_STEPS}" \
 		--layerdrop="${DROPOUT}" \
-		--save_total_limit="3" \
-		--freeze_feature_encoder \
-		--gradient_checkpointing \
-		--chars_to_ignore ${IGNORE_CHARS} \
+		--save_total_limit="${MAX_CHECKPOINTS}" \
+		${ENCODER_FLAG} \
+		${IGNORE_CHARS_FLAG} \
 		${AMP_FLAG} \
 		--cache_dir "/mnt/tmp/wav2vec2-common_voice-fr" \
 		--group_by_length \

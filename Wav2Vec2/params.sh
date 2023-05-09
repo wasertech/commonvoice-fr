@@ -24,3 +24,7 @@ export MODEL_EXPORT_LONG_LANG=""
 export MODEL_EXPORT_ZIP_LANG=""
 
 export IGNORE_CHARS=""
+
+export AUDIO_COLUMN=""
+export SIZE_COLUMN=""
+export TEXT_COLUMN=""

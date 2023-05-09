@@ -14,6 +14,9 @@ ENV BASE_MODEL_NAME=$base_model_name
 ARG model_language=fr
 ENV MODEL_LANGUAGE=$model_language
 
+ARG disable_no_ignore_characters_warning=0
+ENV DONT_WARN_IGNORE_CHARS=$disable_no_ignore_characters_warning
+
 # Training hyper-parameters
 ARG batch_size=16
 ENV BATCH_SIZE=$batch_size
@@ -21,7 +24,7 @@ ENV BATCH_SIZE=$batch_size
 ARG opm_nproc=1
 ENV OMP_NUM_THREADS=$opm_nproc
 
-ARG epochs=30
+ARG epochs=7
 ENV EPOCHS=$epochs
 
 ARG learning_rate="3e-4"
@@ -33,9 +36,35 @@ ENV DROPOUT=$dropout
 ARG amp=1
 ENV AMP=$amp
 
+ARG freeze_encoder=1
+ENV FREEZE_ENCODER=$freeze_encoder
+
 # Gradient Accumulation Steps
-ARG gas=2
+ARG gas=4
 ENV GAS=$gas
+
+ARG gradien_checkpointing=1
+ENV GRAD_CHECK=$gradien_checkpointing
+
+# Warm up uses ratio over steps
+# Set WARMUP_RATIO=0 to use steps instead
+ARG warm_up_steps=500
+ENV WARMUP_STEPS=$warm_up_steps
+
+ARG warm_up_ratio=0.1
+ENV WARMUP_RATIO=$warm_up_ratio
+
+ARG save_steps=400
+ENV SAVE_STEPS=$save_steps
+
+ARG eval_steps=100
+ENV EVAL_STEPS=$eval_steps
+
+ARG eval_strategy="steps"
+ENV EVAL_STRAT=$eval_strategy
+
+ARG max_amount_checkpoints=3
+ENV MAX_CHECKPOINTS=$max_amount_checkpoints
 
 # Data processing workers
 # (too many might OOM) recommended at 1 worker per CPU core or lower.

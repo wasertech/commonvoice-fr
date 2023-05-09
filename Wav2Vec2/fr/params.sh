@@ -25,3 +25,7 @@ export MODEL_EXPORT_ZIP_LANG=""
 
 
 export IGNORE_CHARS=", ? . ! - \; \: \" “ % ‘ ” �"
+
+export AUDIO_COLUMN="wav_filename"
+export SIZE_COLUMN="wav_filesize"
+export TEXT_COLUMN="transcript"

@@ -67,22 +67,22 @@ The default batch size has been tested with this mix of dataset:
  - OpenSLR 57: African Accented French
  - M-AILABS french dataset
 
-### Transfer learning from English
+### Transfer learning from a base Wav2Vec model
 
 To perform transfer learning, please download and make a read-to-use directory
 containing the checkpoint to use. Ready-to-use means directly re-usable checkpoints
 files, with proper `checkpoint` descriptor as TensorFlow produces.
 
-To use an existing checkpoint, just ensure the `docker run` includes a mount such as:
+To use an existing checkpoint just ensure the `docker run` includes a mount such as:
 `type=bind,src=PATH/TO/CHECKPOINTS,dst=/transfer-checkpoint`. Upon running, data
 will be copied from that place.
 
 ## Hardware
 
 Training successfull on:
- - Threadripper 3950X + 128GB RAM
- - 2x RTX 2080 Ti
- - Debian Sid, kernel 5.7, driver 440.100
+ - Threadripper 3950X + 96GB RAM
+ - 2x RTX Titan
+ - Manjaro Linux, kernel 6.1.25-1-MANJARO, driver 530.41.03
  - With ~1000h of audio, one training epoch takes ~23min (Automatic Mixed Precision enabled)
 
 ## Run the image:
