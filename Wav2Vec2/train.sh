@@ -78,7 +78,7 @@ pushd $TRANSCORER_DIR
 
 	if [ ! -f "/mnt/models/wav2vec2-common_voice-fr/checkpoint-*/*model.bin" ]; then
 		trainscorer \
-		--data_path '/mnt/extracted/data' \
+		--data_path "/mnt/extracted/data" \
 		--dataset_name "wav2vec" \
 		--dataset_config_name="fr" \
 		${CHECKPOINT_FLAG} \
