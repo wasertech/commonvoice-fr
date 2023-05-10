@@ -47,7 +47,7 @@ pushd $TRANSCORER_DIR
 	fi;
 	
 	IGNORE_CHARS_FLAG=""
-	if [ -z "${IGNORE_CHARS}" ]; then
+	if [ -z $IGNORE_CHARS ]; then
 		IGNORE_CHARS_FLAG="--chars_to_ignore ${IGNORE_CHARS}"
 	elif [ "${DONT_WARN_IGNORE_CHARS}" != "1" ]; then
 		echo "You should probably ignore some characters like: [ , ? . ! - ; : \" “ % ‘ ” � ]" #noqa
