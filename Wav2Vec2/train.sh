@@ -47,8 +47,8 @@ pushd $TRANSCORER_DIR
 	fi;
 	
 	IGNORE_CHARS_FLAG=""
-	if [ -z $IGNORE_CHARS ]; then
-		IGNORE_CHARS_FLAG="--chars_to_ignore ${IGNORE_CHARS}"
+	if [ -z "${IGNORE_CHARS}" ]; then
+		IGNORE_CHARS_FLAG="--chars_to_ignore=${IGNORE_CHARS}"
 	elif [ "${DONT_WARN_IGNORE_CHARS}" != "1" ]; then
 		echo "You should probably ignore some characters like: [ , ? . ! - ; : \" “ % ‘ ” � ]" #noqa
 		echo -n "Do wish to proceed with training session without ignoring any characters? [type any key to start training or Ctr + C to exit] "
