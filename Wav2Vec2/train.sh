@@ -14,9 +14,9 @@ pushd $TRANSCORER_DIR
 		CHECKPOINT_FLAG='--model_name_or_path="/mnt/models/wav2vec2-common_voice-fr/" --output_dir="/mnt/models/wav2vec2-common_voice-fr" --resume_from_checkpoint="/transfer-checkpoint/checkpoint"'
 	else
 		echo "Using checkpoint from facebook/wav2vec2-large-xlsr-53"
-		CHECKPOINT_FLAG="--model_name_or_path=${BASE_MODEL_NAME} --output_dir='/mnt/models/wav2vec2-common_voice-fr' --overwrite_output_dir"
+		CHECKPOINT_FLAG="--model_name_or_path=${BASE_MODEL_NAME} --output_dir=/mnt/models/wav2vec2-common_voice-fr --overwrite_output_dir"
 	fi;
-
+	
 	HUB_FLAG=""
 	if [ -z "$HUB_API_TOKEN" ]; then
 		if [ -n "$MODEL_ID" ]; then
