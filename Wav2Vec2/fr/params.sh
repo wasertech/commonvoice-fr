@@ -24,7 +24,7 @@ export MODEL_EXPORT_LONG_LANG=""
 export MODEL_EXPORT_ZIP_LANG=""
 
 
-export IGNORE_CHARS=", ? . ! - \; \: \" “ % ‘ ” �"
+export IGNORE_CHAR_FILE="${MODEL_LANGUAGE}/ignore_chars.txt"
 
 export AUDIO_COLUMN="wav_filename"
 export SIZE_COLUMN="wav_filesize"

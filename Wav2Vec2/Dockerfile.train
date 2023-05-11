@@ -1,7 +1,7 @@
 FROM cnstark/pytorch:1.13.0-py3.9.12-cuda11.7.1-ubuntu20.04
 
 ARG transcorer_repo=wasertech/TranScorerLM
-ARG transcorer_branch=6a27a99326b1392ccc9ed9091253e0a228f80c78
+ARG transcorer_branch=409084efb8e740bffd57c59473b9fc7574cecabc
 # ARG transformers_repo=huggingface/transformers
 # ARG transformers_branch=04ab5605fbb4ef207b10bf2772d88c53fc242e83
 # ARG datasets_repo=huggingface/datasets

@@ -16,7 +16,7 @@ pushd $TRANSCORER_DIR
 		echo "Using checkpoint from facebook/wav2vec2-large-xlsr-53"
 		CHECKPOINT_FLAG="--model_name_or_path=${BASE_MODEL_NAME} --output_dir=/mnt/models/wav2vec2-common_voice-fr --overwrite_output_dir"
 	fi;
-	
+
 	HUB_FLAG=""
 	if [ -z "$HUB_API_TOKEN" ]; then
 		if [ -n "$MODEL_ID" ]; then
@@ -47,25 +47,27 @@ pushd $TRANSCORER_DIR
 	fi;
 	
 	IGNORE_CHARS_FLAG=""
-	if [ -z "${IGNORE_CHARS}" ]; then
-		IGNORE_CHARS_FLAG="--chars_to_ignore=${IGNORE_CHARS}"
+	if [[ -n "${IGNORE_CHAR_FILE}" ]]; then
+		IGNORE_CHARS=$(cat ~/${MODEL_LANGUAGE}/ignore_chars.txt | tr '\n' ' ')
+		IGNORE_CHARS_FLAG="--chars_to_ignore $IGNORE_CHARS"
 	elif [ "${DONT_WARN_IGNORE_CHARS}" != "1" ]; then
 		echo "You should probably ignore some characters like: [ , ? . ! - ; : \" “ % ‘ ” � ]" #noqa
-		echo -n "Do wish to proceed with training session without ignoring any characters? [type any key to start training or Ctr + C to exit] "
+		echo -n "Do wish to proceed with training session without ignoring any characters?"
+		echo "[type any key to start training or Ctr + C to exit] "
 		read -n 1
 	fi;
 
-	if [ -n "${AUDIO_COLUMN}" ]; then
+	if [ -z "${AUDIO_COLUMN}" ]; then
 		echo "Set AUDIO_COLUMN=${AUDIO_COLUMN}"
 		exit 1
 	fi;
 
-	if [ -n "${SIZE_COLUMN}" ]; then
+	if [ -z "${SIZE_COLUMN}" ]; then
 		echo "Set SIZE_COLUMN=${SIZE_COLUMN}"
 		exit 1
 	fi;
 
-	if [ -n "${TEXT_COLUMN}" ]; then
+	if [ -z "${TEXT_COLUMN}" ]; then
 		echo "Set TEXT_COLUMN=${TEXT_COLUMN}"
 		exit 1
 	fi;
