@@ -40,7 +40,7 @@ ARG freeze_encoder=1
 ENV FREEZE_ENCODER=$freeze_encoder
 
 # Gradient Accumulation Steps
-ARG gas=4
+ARG gas=2
 ENV GAS=$gas
 
 ARG gradien_checkpointing=1
