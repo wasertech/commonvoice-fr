@@ -30,7 +30,7 @@ ENV EPOCHS=$epochs
 ARG learning_rate="3e-4"
 ENV LEARNING_RATE=$learning_rate
 
-ARG dropout=0.3
+ARG dropout=0.0
 ENV DROPOUT=$dropout
 
 ARG amp=1

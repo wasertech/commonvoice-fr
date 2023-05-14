@@ -87,6 +87,7 @@ pushd $TRANSCORER_DIR
 		--preprocessing_num_workers="${NPROC}" \
 		--num_train_epochs="${EPOCHS}" \
 		--per_device_train_batch_size="${BATCH_SIZE}" \
+		--per_device_eval_batch_size="${BATCH_SIZE}" \
 		${GRADIENT_ACCUMULATION_FLAG} \
 		--learning_rate="${LEARNING_RATE}" \
 		${WARMUP_FLAG} \
