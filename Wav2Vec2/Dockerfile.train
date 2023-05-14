@@ -18,8 +18,11 @@ ARG disable_no_ignore_characters_warning=0
 ENV DONT_WARN_IGNORE_CHARS=$disable_no_ignore_characters_warning
 
 # Training hyper-parameters
-ARG batch_size=16
-ENV BATCH_SIZE=$batch_size
+ARG train_batch_size=16
+ENV TRAIN_BATCH_SIZE=$batch_size
+
+ARG eval_batch_size=8
+ENV EVAL_BATCH_SIZE=$batch_size
 
 ARG opm_nproc=1
 ENV OMP_NUM_THREADS=$opm_nproc
