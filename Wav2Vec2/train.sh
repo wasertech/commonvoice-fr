@@ -72,14 +72,23 @@ pushd $TRANSCORER_DIR
 		exit 1
 	fi;
 
-	if [ "${WARMUP_RATIO}" -gt "0" ]; then
+	WARMUP_FLAG=""
+	if [ ! -z "${WARMUP_RATIO}"]; then
 		WARMUP_FLAG="--warmup_ratio=${WARMUP_RATIO}"
 	elif [ "${WARMUP_STEPS}" -gt "0" ]; then
 		WARMUP_FLAG="--warmup_steps=${WARMUP_STEPS}"
 	fi
 
+	TRAINING_CMD=""
+	# distribute training if multiple gpus
+	if [ "${DISTRIBUTE_TRAIN}" = "1" ]; then
+		TRAINING_CMD="python -m torch.distributed.launch --nproc_per_node ${NPROC_PER_GPU} $(which trainscorer)"
+	else
+		TRAINING_CMD="trainscorer"
+	fi
+
 	if [ ! -f "/mnt/models/wav2vec2-common_voice-fr/checkpoint-*/*model.bin" ]; then
-		trainscorer \
+		${TRAINING_CMD} \
 		--data_path "/mnt/extracted/data" \
 		--dataset_name "wav2vec" \
 		--dataset_config_name="fr" \

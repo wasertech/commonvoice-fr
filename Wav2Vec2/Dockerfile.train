@@ -18,11 +18,15 @@ ARG disable_no_ignore_characters_warning=0
 ENV DONT_WARN_IGNORE_CHARS=$disable_no_ignore_characters_warning
 
 # Training hyper-parameters
+
+ARG distribute_training=0
+ENV DISTRIBUTE_TRAIN=$distribute_training
+
 ARG train_batch_size=16
-ENV TRAIN_BATCH_SIZE=$batch_size
+ENV TRAIN_BATCH_SIZE=$train_batch_size
 
 ARG eval_batch_size=8
-ENV EVAL_BATCH_SIZE=$batch_size
+ENV EVAL_BATCH_SIZE=$eval_batch_size
 
 ARG opm_nproc=1
 ENV OMP_NUM_THREADS=$opm_nproc
@@ -76,6 +80,12 @@ ENV MAX_CHECKPOINTS=$max_amount_checkpoints
 # you are likely to experience OOM issues.
 ARG nproc=12
 ENV NPROC=$nproc
+
+# Only for distributed training (more than one GPU)
+# DISTRIBUTE_TRAIN must be 1
+# set NPROC_PER_GPU=2 to use 2 GPUs
+ARG nproc_per_gpu=0
+ENV NPROC_PER_GPU=$nproc_per_gpu
 
 ARG hub_token=""
 ENV HUB_API_TOKEN=$hub_token
