@@ -24,6 +24,24 @@ docker run \
       --ulimit memlock=-1 \
       --ulimit stack=67108864 \
       --mount type=bind,src='/mnt/Data_II/Données/STT/data',dst=/mnt \
+      commonvoice-fr && \
+    docker container prune || \
+    docker container prune -f
+```
+
+## Utilisez le shell dans le conteneur
+
+Utiliez `bash` comme point d'entrée en entrant dans le conteneur.
+
+```shell
+docker run \
+      -it \
+      --gpus=all \
+      --privileged \
+      --shm-size=1g \
+      --ulimit memlock=-1 \
+      --ulimit stack=67108864 \
+      --mount type=bind,src='/mnt/Data_II/Données/STT/data',dst=/mnt \
       --entrypoint bash commonvoice-fr && \
     docker container prune || \
     docker container prune -f
