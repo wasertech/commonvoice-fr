@@ -13,7 +13,7 @@ docker build \
 
 ## Lancez un entraînement 
 
-Replace `/mnt/Data_II/Données/STT/data` with the locatiuon of your data to be mounted
+Replace `/mnt/Data_II/Données/STT/data` with the location of your data to be mounted
 
 ```shell
 docker run \
